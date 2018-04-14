@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = []):
+def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0):
 
     def loop1(name):
 
@@ -32,12 +32,19 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
 
     except WindowsError: None
     
-    amount = int(raw_input('Number of songs: '))
-    while amount > 100 or amount < 1: amount = int(raw_input('Between 1 and 100: '))
+    amount = raw_input('Range of songs\nformat - starting song + colon and space + ending song\nexample n1: n2: ').split(': ')
+    while (1 + int(amount[1]) - int(amount[0])) > 11:
+        amount = raw_input('You can only download 10 songs at a time before getting dreops in quality (change ip after re-doing): ').split(': ')
+    am0 = int(amount[0])
+    am1 = int(amount[1])
 
-    for i in bsoup1.findAll('h2', {'class': 'chart-row__song'}): names.append(str(i.string))
+    for i in bsoup1.findAll('h2', {'class': 'chart-row__song'}):
 
-    names = names[0: amount]
+        count += 1
+        
+        if count >= int(amount[0]) and count <= int(amount[1]): names.append(str(i.string))
+            
+        else: continue
 
     for name in names:
 
@@ -66,7 +73,13 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
 
             if t == '(' or t == ')' or t == ' ' or t == '-' or t == '&' or t in al: titles2.append(t)
 
-        yt = YouTube(url)
+        try: yt = YouTube(url)
+        
+        except KeyError:
+
+            print 'Key Error - Please Exit And Try Again (click okay)'
+            exit()
+        
         stream = yt.streams.first()
         stream.download(path1 + '\\mp4')
 
