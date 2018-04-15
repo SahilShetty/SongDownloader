@@ -49,6 +49,7 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
     for name in names:
 
         name_ = name
+        print '\n' + name_, 'is downloading'
         
         name = list(name)
         name = loop1(name)
@@ -75,22 +76,23 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
 
         try: yt = YouTube(url)
         
-        except KeyError:
-
-            print 'Key Error - Please Exit And Try Again (click okay)'
+        except:
+            
+            print 'Sorry, but those are all the songs I can download not.'
+            print 'Please click "okay"'
             exit()
         
         stream = yt.streams.first()
-        stream.download(path1 + '\\mp4')
+        stream.download(path1 + '/mp4')
 
         titles2 = ''.join(titles2)
-        path2 = path1 + '\\mp4\\' + titles2
+        path2 = path1 + '/mp4/' + titles2
 
         try:
             
             clip = mp.VideoFileClip(path2 + ".mp4")
-            os.chdir(path1 + '\\mp3\\')
-            clip.audio.write_audiofile(path1 + '\\mp3\\' + name_ + ".mp3")
+            os.chdir(path1 + '/mp3')
+            clip.audio.write_audiofile(path1 + '/mp3/' + name_ + ".mp3")
 
         except IOError: print 'Cannot download', "'" + name_ + "'"
         
