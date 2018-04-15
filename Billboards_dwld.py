@@ -51,7 +51,7 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
                             return (url, titles1)
 
 
-    path1 = 'C:\Users\Seema\Desktop\Songs' # raw_input('Path of any folder: ')
+    path1 = raw_input('Path of any folder: ')
     os.chdir(path1)
 
     try:
