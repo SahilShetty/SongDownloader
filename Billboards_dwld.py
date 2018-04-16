@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0):
+def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0, error = False):
 
     def searchUrl(name):
 
@@ -109,11 +109,12 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
             os.chdir(path1 + '/mp3')
             clip.audio.write_audiofile(path1 + '/mp3/' + name_ + ".mp3")
 
-        except IOError: print 'Cannot download', "'" + name_ + "'"
+        except IOError: error = True
 
         titles2 = []
-        print "'" + name_ + "'", 'has downloaded'
+        if not error: print "'" + name_ + "'", 'has downloaded'
+        else: print 'Cannot download', "'" + name_ + "'"
 
 
 print 'For over 7 song downloads, VPN is needed'
-print main()
+main()
