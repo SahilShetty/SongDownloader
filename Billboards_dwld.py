@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0, error = False):
+def main(amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0, error = False):
 
     def searchUrl(name):
 
@@ -61,11 +61,10 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
 
     except WindowsError: None
 
-    amount = raw_input('Range of songs\nformat - starting song + colon and space + ending song\nexample n1: n2: ').split(': ')
-    while (1 + int(amount[1]) - int(amount[0])) > 11:
-        amount = raw_input('You can only download 10 songs at a time before getting dreops in quality (change ip after re-doing): ').split(': ')
-    am0 = int(amount[0])
-    am1 = int(amount[1])
+    if amount == None:
+        amount = raw_input('Range of songs\nformat - starting song + colon and space + ending song\nexample n1: n2: ').split(': ')
+        while int(amount[0]) >= int(amount[1]) and int(amount[1]) >= 100:
+            amount = raw_input('Enter valid values: ').split(': ')
 
     for i in bsoup1.findAll('h2', {'class': 'chart-row__song'}):
 
@@ -98,7 +97,9 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
             raise KeyboardInterrupt
         
         stream = yt.streams.first()
-        stream.download(path1 + '/mp4')
+        
+        try: stream.download(path1 + '/mp4')
+        except: main([str(count), amount[1]])
 
         titles2 = ''.join(titles2)
         path2 = path1 + '/mp4/' + titles2
@@ -117,4 +118,4 @@ def main(names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-10
 
 
 print 'For over 7 song downloads, VPN is needed'
-main()
+main(None)
