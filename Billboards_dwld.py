@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0, error = False):
+def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0, error = False):
 
     def searchUrl(name):
 
@@ -50,8 +50,7 @@ def main(amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/chart
                             url = ('https://www.youtube.com' + href)
                             return (url, titles1)
 
-
-    path1 = raw_input('Path of any folder: ')
+                        
     os.chdir(path1)
 
     try:
@@ -62,9 +61,10 @@ def main(amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/chart
     except WindowsError: None
 
     if amount == None:
+        
         amount = raw_input('Range of songs\nformat - starting song + colon and space + ending song\nexample n1: n2: ').split(': ')
-        while int(amount[0]) >= int(amount[1]) and int(amount[1]) >= 100:
-            amount = raw_input('Enter valid values: ').split(': ')
+        
+        while int(amount[0]) >= int(amount[1]) and int(amount[1]) >= 100: amount = raw_input('Enter valid values: ').split(': ')
 
     for i in bsoup1.findAll('h2', {'class': 'chart-row__song'}):
 
@@ -99,7 +99,11 @@ def main(amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/chart
         stream = yt.streams.first()
         
         try: stream.download(path1 + '/mp4')
-        except: main([str(count), amount[1]])
+        
+        except:
+
+            print 'Restarting download. Do not turn off your computer.'
+            main(path1, [str(count), amount[1]])
 
         titles2 = ''.join(titles2)
         path2 = path1 + '/mp4/' + titles2
@@ -115,7 +119,8 @@ def main(amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/chart
         titles2 = []
         if not error: print "'" + name_ + "'", 'has downloaded'
         else: print 'Cannot download', "'" + name_ + "'"
+        error = False
 
 
 print 'For over 7 song downloads, VPN is needed'
-main(None)
+main(raw_input('Path of any folder: '), None)
