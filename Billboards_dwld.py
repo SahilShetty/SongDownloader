@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], count = 0, error = False):
+def main(path1, amount, eLst = [], names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], error = False):
 
     def searchUrl(name):
 
@@ -66,6 +66,8 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
         
         while int(amount[0]) >= int(amount[1]) and int(amount[1]) >= 100: amount = raw_input('Enter valid values: ').split(': ')
 
+    count = int(amount[0]) - 1
+
     for i in bsoup1.findAll('h2', {'class': 'chart-row__song'}):
 
         count += 1
@@ -103,7 +105,7 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
         except:
 
             print 'Restarting download. Do not turn off your computer.'
-            main(path1, [str(count), amount[1]])
+            main(path1, [str(count), amount[1]], count)
 
         titles2 = ''.join(titles2)
         path2 = path1 + '/mp4/' + titles2
@@ -118,8 +120,20 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
 
         titles2 = []
         if not error: print "'" + name_ + "'", 'has downloaded'
-        else: print 'Cannot download', "'" + name_ + "'"
+        else: print 'Cannot download', "'" + name_ + "'" + '\nWill download at the end of the program.'
+        eLst.append(count)
         error = False
 
+    return eLst
 
-main(raw_input('Path of any folder: '), None)
+
+user = raw_input('Path of any folder: ')
+run = main(user, None)
+
+if len(run) > 0:
+
+    print 'Re-downloading the missed ones'
+    for i in run: main(user, [str(i), str(i)])
+
+
+print 'COMPLETE'
