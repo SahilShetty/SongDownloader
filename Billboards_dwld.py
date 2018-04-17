@@ -122,5 +122,4 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
         error = False
 
 
-print 'For over 7 song downloads, VPN is needed'
 main(raw_input('Path of any folder: '), None)
