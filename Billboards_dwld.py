@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(path1, amount, eLst = [], names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], error = False):
+def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [], remove = [], error = False):
 
     def searchUrl(name):
 
@@ -104,8 +104,8 @@ def main(path1, amount, eLst = [], names = [], bsoup1 = Bsoup(get('https://www.b
         
         except:
 
-            print 'Restarting download. Do not turn off your computer.'
-            main(path1, [str(count), amount[1]], count)
+            print 'Restarting'
+            main(path1, [str(count), amount[1]])
 
         titles2 = ''.join(titles2)
         path2 = path1 + '/mp4/' + titles2
@@ -120,20 +120,9 @@ def main(path1, amount, eLst = [], names = [], bsoup1 = Bsoup(get('https://www.b
 
         titles2 = []
         if not error: print "'" + name_ + "'", 'has downloaded'
-        else: print 'Cannot download', "'" + name_ + "'" + '\nWill download at the end of the program.'
-        eLst.append(count)
+        else: print 'Cannot download', "'" + name_ + "'"
         error = False
 
-    return eLst
 
-
-user = raw_input('Path of any folder: ')
-run = main(user, None)
-
-if len(run) > 0:
-
-    print 'Re-downloading the missed ones'
-    for i in run: main(user, [str(i), str(i)])
-
-
-print 'COMPLETE'
+main()
+print 'FINISHED'
