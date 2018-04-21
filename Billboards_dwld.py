@@ -78,7 +78,7 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
 
     for name_ in names:
 
-        print '\n' + name_, 'is downloading'
+        print '\n' + "'"+ name_ + "'", 'is downloading'
         
         name = searchUrl(list(name_))
         if name[-1] not in ascii_letters: del name[-1]
@@ -100,7 +100,7 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
         
         stream = yt.streams.first()
         
-        try: stream.download(path1 + '/mp4')
+        try: stream.download(path1 + '\\mp4')
         
         except:
 
@@ -108,13 +108,13 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
             main(path1, [str(count), amount[1]])
 
         titles2 = ''.join(titles2)
-        path2 = path1 + '/mp4/' + titles2
+        path2 = path1 + '\\mp4\\' + titles2
 
         try:
             
             clip = mp.VideoFileClip(path2 + ".mp4")
-            os.chdir(path1 + '/mp3')
-            clip.audio.write_audiofile(path1 + '/mp3/' + name_ + ".mp3")
+            os.chdir(path1 + '\\mp3')
+            clip.audio.write_audiofile(path1 + '\\mp3\\' + name_ + ".mp3")
 
         except IOError: error = True
 
@@ -124,5 +124,5 @@ def main(path1, amount, names = [], bsoup1 = Bsoup(get('https://www.billboard.co
         error = False
 
 
-main()
+main(raw_input('Path: '), None)
 print 'FINISHED'
