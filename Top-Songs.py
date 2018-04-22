@@ -7,7 +7,7 @@ from pytube import YouTube
 
 
 def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), count = 0, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [],
-         remove = [], error = False):
+         filNames = [], error = False):
 
     def searchUrl(name):
 
@@ -65,9 +65,14 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
 
         count += 1
         
-        if count >= int(amount[0]) and count <= int(amount[1]) and str(h2.string) + '\n' not in pre_dwded: names.append(str(h2.string))
+        if count >= int(amount[0]) and count <= int(amount[1]) and str(h2.string) + '\n' not in pre_dwded:
+
+            names.append(str(h2.string))
+            filNames.append(str(h2.string))
 
     for name_ in names:
+
+        print  '\n' + name_
 
         print '\n' + "'" + name_ + "'", 'is downloading'
         
@@ -109,15 +114,18 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
 
         except IOError: error = True
 
-        titles2 = []
         if not error: print "'" + name_ + "'", 'has downloaded'
+        
         else:
 
-            names.remove(name_)
+            filNames.remove(name_)
+            print names
             print 'Cannot download', "'" + name_ + "'"
+
+        titles2 = []
         error = False
 
-    return names
+    return filNames
 
 
 path = raw_input('Path: ')
