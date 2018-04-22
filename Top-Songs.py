@@ -91,7 +91,7 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
         
         except:
             
-            print 'Restart with the first number as', str(int(amount[0]) + filNames.index(names_))
+            print 'Restart with the first number as', str(int(amount[0]) + filNames.index(name_))
             
             for delete in filNames[filNames.index(name_): ]: filNames.remove(delete)
             return filNames
@@ -102,7 +102,7 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
         
         except:
 
-            print 'Restart with the first number as', str(int(amount[0]) + filNames.index(names_))
+            print 'Restart with the first number as', str(int(amount[0]) + filNames.index(name_))
 
             for delete in filNames[filNames.index(name_): ]: filNames.remove(delete)
             return filNames
