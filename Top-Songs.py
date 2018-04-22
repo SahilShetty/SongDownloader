@@ -119,7 +119,6 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
         else:
 
             filNames.remove(name_)
-            print names
             print 'Cannot download', "'" + name_ + "'"
 
         titles2 = []
