@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), count = 0, names = [], bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml'), titles2 = [],
-         filNames = [], error = False):
+def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), count = 0, names = [], filNames = [], titles2 = [], error = False
+         bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml')):
 
     def searchUrl(name):
 
@@ -92,7 +92,9 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
         except:
             
             print 'Restart'
-            return []
+            
+            for delete in filNames[filNames.index(name_): ]: filNames.remove(delete)
+            return filNames
         
         stream = yt.streams.first()
         
@@ -101,7 +103,9 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
         except:
 
             print 'Restart'
-            return []
+
+            for delete in filNames[filNames.index(name_): ]: fil.Names.remove(delete)
+            return filNames
 
         titles2 = ''.join(titles2)
         path2 = path1 + '\\mp4\\' + titles2
