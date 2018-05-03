@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as Bsoup
 from pytube import YouTube
 
 
-def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), count = 0, names = [], filNames = [], titles2 = [], error = False,
+def main(path1, pre_dwded, amount, count = 0, names = [], filNames = [], titles2 = [], error = False,
          bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml')):
 
     def searchUrl(name):
@@ -51,7 +51,9 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
                             url = ('https://www.youtube.com' + href)
                             return (url, titles1)
 
-                        
+
+    if amount == None: amount = raw_input('Range of songs: ').split(': ')
+
     os.chdir(path1)
 
     try:
@@ -75,12 +77,21 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
         print  '\n' + name_
 
         print '\n' + "'" + name_ + "'", 'is downloading'
+
+        try: name = searchUrl(list(name_))
         
-        name = searchUrl(list(name_))
+        except:
+
+            print 'Sorry, but counldn\'t download', name_
+            filNames.remove(name_)
+            continue
+        
         if name[-1] not in ascii_letters: del name[-1]
+        
         name = ''.join(name)
 
         bsoup2 = Bsoup(get('https://www.youtube.com/results?search_query=' + name + '+lyrics').text, 'lxml')
+        
         (url, titles1) = video(bsoup2)
         
         for t in titles1:
@@ -89,23 +100,13 @@ def main(path1, pre_dwded, amount = raw_input('Range of songs: ').split(': '), c
 
         try: yt = YouTube(url)
         
-        except:
-            
-            print 'Restart with the first number as', str(int(amount[0]) + filNames.index(name_))
-            
-            for delete in filNames[filNames.index(name_): ]: filNames.remove(delete)
-            return filNames
+        except: main(path1, pre_dwded, [str(int(amount[0]) + names.index(name_)), amount[1]])
         
         stream = yt.streams.first()
         
         try: stream.download(path1 + '\\mp4')
         
-        except:
-
-            print 'Restart with the first number as', str(int(amount[0]) + filNames.index(name_))
-
-            for delete in filNames[filNames.index(name_): ]: filNames.remove(delete)
-            return filNames
+        except: main(path1, pre_dwded, [str(int(amount[0]) + names.index(name_)), amount[1]])
 
         titles2 = ''.join(titles2)
         path2 = path1 + '\\mp4\\' + titles2
@@ -149,7 +150,7 @@ except IOError:
 fil.close()
 
 fil = openfil('a', path)
-for already in main(path, pre_dwded): fil.write(already + '\n')
+for already in main(path, pre_dwded, None): fil.write(already + '\n')
 fil.close()
 
 print 'FINISHED'
