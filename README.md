@@ -1,5 +1,5 @@
 # Top-Songs
-Downloads the top 100 songs (referencing the billboards top 100)
+Automatically downloads the top 100 songs (referencing the billboards top 100)
 
 How to use-
 
