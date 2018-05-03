@@ -1,5 +1,10 @@
 # Top-Songs
-Step 1) Uses a webscraper to get names of the trending songs off of billboards top 100
-Step 2) Edits the names as YouTube URL
-Step 3) Uses another webscraper object to and downloads the best video
-Step 4) Converts the mp4 to an mp3
+Downloads the top 100 songs (referencing the billboards top 100)
+
+How to use-
+
+  Input any path if frst time use
+  Else if used before, put the same path
+  Input the amount of songs downloaded by the syntax - number1: number2
+  The colon and space are essential
+  
