@@ -87,7 +87,7 @@ for titles in boardSoup.findAll('div', {'class': 'chart-row__title'}):
 
 for rmv in stringTitles:
 
-	sng_art = rmv.split('\n\n') # song to artist lst
+	sng_art = rmv.split('\n\n') # song with artist list
 
 	del sng_art[-1] 
 
