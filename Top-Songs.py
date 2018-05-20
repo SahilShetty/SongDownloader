@@ -39,6 +39,7 @@ path = raw_input('Path:\n')
 openFile = lambda mode: open(path + '\\dwd.txt', mode)
 
 try:
+	
 	os.chdir(path)
 
 	os.mkdir('mp3')
