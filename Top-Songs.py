@@ -1,156 +1,171 @@
-import moviepy.editor as mp
-from requests import get
 import os
-from string import *
-from bs4 import BeautifulSoup as Bsoup
+
+import moviepy.editor as mp
+
+from shutil import rmtree
+
 from pytube import YouTube
 
+from requests import get
 
-def main(path1, pre_dwded, amount, count = 0, names = [], filNames = [], titles2 = [], error = False,
-         bsoup1 = Bsoup(get('https://www.billboard.com/charts/hot-100').text, 'lxml')):
+from string import *
 
-    def searchUrl(name):
-
-        for lett in range(len(name) - 1):
-
-            if name[lett] == ' ': name[lett] = '+'
-            
-            if name[lett] not in ascii_letters and name[lett] != '+':
-                
-                del name[lett]
-                searchUrl(name)
-
-        return name
+from bs4 import BeautifulSoup as Bsoup
 
 
-    def video(bsoup2):
+def createUrl(string):
 
-        for lnk in bsoup2.findAll('a'):
+	container = []
 
-            href = lnk.get('href')
-            
-            if '/watch?v=' in href:
+	stringUrl = ''
 
-                for vName in bsoup2.findAll('a', {'href': href}):
+	for names in string:
 
-                    if vName.get('title') != None:
+		for lett in names:
+			
+			if lett in chars: stringUrl += lett
 
-                        titles1 = list(vName.get('title'))
+			elif lett == ' ': stringUrl += '+'
 
-                        for letter in titles1:
+		container.append(stringUrl)
 
-                            if letter not in tuple(ascii_letters) + tuple(punctuation) + tuple(' '):
+		stringUrl = ''
 
-                                truth = False
-                                break
-                            
-                            else: truth = True
-
-                        if truth:
-
-                            url = ('https://www.youtube.com' + href)
-                            return (url, titles1)
+	return container
 
 
-    if amount == None: amount = raw_input('Range of songs: ').split(': ')
+path = raw_input('Path:\n')
 
-    os.chdir(path1)
-
-    try:
-        
-        os.mkdir('mp4')
-        os.mkdir('mp3')
-
-    except WindowsError: None
-
-    for h2 in bsoup1.findAll('h2', {'class': 'chart-row__song'}):
-
-        count += 1
-        
-        if count >= int(amount[0]) and count <= int(amount[1]) and str(h2.string) + '\n' not in pre_dwded:
-
-            names.append(str(h2.string))
-            filNames.append(str(h2.string))
-
-    for name_ in names:
-
-        print  '\n' + name_
-
-        print '\n' + "'" + name_ + "'", 'is downloading'
-
-        try: name = searchUrl(list(name_))
-        
-        except:
-
-            print 'Sorry, but counldn\'t download', name_
-            filNames.remove(name_)
-            continue
-        
-        if name[-1] not in ascii_letters: del name[-1]
-        
-        name = ''.join(name)
-
-        bsoup2 = Bsoup(get('https://www.youtube.com/results?search_query=' + name + '+lyrics').text, 'lxml')
-        
-        (url, titles1) = video(bsoup2)
-        
-        for t in titles1:
-
-            if t == '(' or t == ')' or t == ' ' or t == '-' or t == '&' or t in ascii_letters: titles2.append(t)
-
-        try: yt = YouTube(url)
-        
-        except: main(path1, pre_dwded, [str(int(amount[0]) + names.index(name_)), amount[1]])
-        
-        stream = yt.streams.first()
-        
-        try: stream.download(path1 + '\\mp4')
-        
-        except: main(path1, pre_dwded, [str(int(amount[0]) + names.index(name_)), amount[1]])
-
-        titles2 = ''.join(titles2)
-        path2 = path1 + '\\mp4\\' + titles2
-
-        try:
-            
-            clip = mp.VideoFileClip(path2 + ".mp4")
-            os.chdir(path1 + '\\mp3')
-            clip.audio.write_audiofile(path1 + '\\mp3\\' + name_ + ".mp3")
-
-        except IOError: error = True
-
-        if not error: print "'" + name_ + "'", 'has downloaded'
-        
-        else:
-
-            filNames.remove(name_)
-            print 'Cannot download', "'" + name_ + "'"
-
-        titles2 = []
-        error = False
-
-    return filNames
-
-
-path = raw_input('Path: ')
-
-openfil = lambda mode, path: open(path + '\\dwd.txt', mode)
+openFile = lambda mode: open(path + '\\dwd.txt', mode)
 
 try:
 
-    fil = openfil('r', path)
-    pre_dwded = fil.readlines()
-    
+		os.chdir(path)
+
+		os.mkdir('mp3')
+
+		os.mkdir('mp4')
+
+except WindowsError: None
+
+try: file = openFile('r')
 
 except IOError:
-    
-    fil = openfil('w', path)
-    pre_dwded = []
 
-fil.close()
+	file = openFile('w')
 
-fil = openfil('a', path)
-for already in main(path, pre_dwded, None): fil.write(already + '\n')
-fil.close()
+	file = openFile('r')
+
+dwded = file.readlines()
+
+board = get('https://www.billboard.com/charts/hot-100').text
+
+boardSoup = Bsoup(board, 'lxml') # html parser
+
+song_artist = {}
+
+url = []
+
+fileTitle = []
+
+stringTitles = []
+
+count = 1
+
+repeat = False
+
+amount = raw_input('Song range:\n').split(': ')
+
+chars = tuple(ascii_letters) + ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+
+for titles in boardSoup.findAll('div', {'class': 'chart-row__title'}):
+
+	if count <= int(amount[1]) and count >= int(amount[0]): stringTitles.append(str(titles.get_text()))
+
+	elif count > int(amount[1]): break
+
+	count += 1
+
+for rmv in stringTitles:
+
+	sng_art = rmv.split('\n\n') # song to artist lst
+
+	del sng_art[-1] 
+
+	sng_art[0] = ''.join(list(sng_art[0])[1: ]) # removes beginning '\n'
+
+	song_artist[sng_art[0]] = sng_art[1]
+
+songsURL = createUrl(song_artist.keys())
+
+artistsURL = createUrl(song_artist.values())
+
+for arrange in range(int(amount[1]) + 1 - int(amount[0])): # thats the len of songs and artists
+
+	short = song_artist.values()[arrange] + ' - ' + song_artist.keys()[arrange]
+
+	if (short + '\n') in dwded:
+
+		print '\n' + song_artist.keys()[arrange], 'has already downloaded' + '\n'
+
+		continue
+
+	url = 'https://www.youtube.com/results?search_query=' + songsURL[arrange] + '+by+' + artistsURL[arrange] + '+lyrics'
+
+	tube = get(url).text
+
+	tubeSoup = Bsoup(tube, 'lxml')
+
+	for link in tubeSoup.findAll('a'): # youtube is hard to web scrape
+
+		if '/watch?v=' in link.get('href'):
+
+			if not repeat: href = 'https://www.youtube.com/' + link.get('href')
+
+			if link.string == None: repeat = True
+
+			else:
+
+				vidTitle = str(link.string) + '.mp4'
+
+				repeat = False # for the rest of the downloads
+
+				break
+
+	for rmv in range(len(vidTitle) - 3): # to remove the 'mp4' part to be added later
+
+		if vidTitle[rmv] == '(' or vidTitle[rmv] == ')' or vidTitle[rmv] == ' ' or vidTitle[rmv] == '-' or vidTitle[rmv] == '&' or vidTitle[rmv] in chars:
+
+			fileTitle.append(vidTitle[rmv])
+
+	fileTitle.append('.mp4')
+
+	fileTitle = ''.join(fileTitle)
+
+	yt = YouTube(href)
+
+	stream = yt.streams.first()
+
+	stream.download(path + '\\mp4')
+
+	os.chdir(path + '\\mp4')
+
+	clip = mp.VideoFileClip(fileTitle)
+
+	os.chdir(path + '\\mp3')
+
+	clip.audio.write_audiofile(short + '.mp3')
+
+	file.write(short + '\n')
+
+	file = openFile('a')
+
+	fileTitle = [] # restarting for the other song titles
+
+file.close()
+
+rmtree(path + '\\mp4')
+
+os.mkdir(path + '\\mp4')
 
 print 'FINISHED'
