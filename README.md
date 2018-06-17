@@ -1,14 +1,10 @@
 # Top-Songs
-Automatically downloads the top 100 songs (referencing the billboards top 100)
+Automatically downloads inputed songs
 
-How to use-
+1) Input path for download
 
-  Input any path if first time use
-  
-  Else if used before, put the same path
-  
-  Input the amount of songs downloaded by the syntax - number1: number2
-  
-  The colon and space are essential
+2) Input Song name
+
+3) Input Author
   
 (made in python 2.7)
