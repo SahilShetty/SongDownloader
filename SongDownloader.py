@@ -77,3 +77,5 @@ clip = mp.VideoFileClip(file)
 os.chdir(path + '\\mp3')
 
 clip.audio.write_audiofile(song + '.mp3')
+
+os.remove(file)
