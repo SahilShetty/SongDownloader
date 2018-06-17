@@ -79,5 +79,3 @@ os.chdir(path + '\\mp3')
 clip.audio.write_audiofile(song + '.mp3')
 
 os.chdir(path + '\\mp4')
-
-os.remove(file)
